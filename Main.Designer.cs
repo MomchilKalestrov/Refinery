@@ -33,11 +33,11 @@
             container = new SplitContainer();
             hint = new GroupBox();
             timetableTextBox = new RichTextBox();
-            startShopContainer = new TableLayoutPanel();
             startButton = new Button();
-            stopButton = new Button();
-            emergencyButton = new Button();
+            startShopContainer = new TableLayoutPanel();
+            saveTimetableButton = new Button();
             newTimeButton = new Button();
+            emergencyButton = new Button();
             settingsTab = new TabPage();
             emergencyTextBox = new TextBox();
             emergencyLabel = new Label();
@@ -106,11 +106,11 @@
             // 
             // container.Panel2
             // 
+            container.Panel2.Controls.Add(startButton);
             container.Panel2.Controls.Add(startShopContainer);
             container.Panel2.Controls.Add(emergencyButton);
-            container.Panel2.Controls.Add(newTimeButton);
             container.Size = new Size(258, 455);
-            container.SplitterDistance = 383;
+            container.SplitterDistance = 380;
             container.SplitterWidth = 1;
             container.TabIndex = 4;
             // 
@@ -121,7 +121,7 @@
             hint.Location = new Point(0, 0);
             hint.Margin = new Padding(0);
             hint.Name = "hint";
-            hint.Size = new Size(258, 383);
+            hint.Size = new Size(258, 380);
             hint.TabIndex = 0;
             hint.TabStop = false;
             hint.Text = "Schedule";
@@ -132,20 +132,32 @@
             timetableTextBox.Dock = DockStyle.Fill;
             timetableTextBox.Location = new Point(3, 19);
             timetableTextBox.Name = "timetableTextBox";
-            timetableTextBox.Size = new Size(252, 361);
+            timetableTextBox.Size = new Size(252, 358);
             timetableTextBox.TabIndex = 0;
             timetableTextBox.Text = "";
             timetableTextBox.TextChanged += timetableTextBox_TextChange;
+            // 
+            // startButton
+            // 
+            startButton.Dock = DockStyle.Bottom;
+            startButton.Location = new Point(0, 5);
+            startButton.Margin = new Padding(0);
+            startButton.Name = "startButton";
+            startButton.Size = new Size(258, 23);
+            startButton.TabIndex = 0;
+            startButton.Text = "Start";
+            startButton.UseVisualStyleBackColor = true;
+            startButton.Click += startButton_Click;
             // 
             // startShopContainer
             // 
             startShopContainer.ColumnCount = 2;
             startShopContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             startShopContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            startShopContainer.Controls.Add(startButton, 0, 0);
-            startShopContainer.Controls.Add(stopButton, 1, 0);
+            startShopContainer.Controls.Add(saveTimetableButton, 0, 0);
+            startShopContainer.Controls.Add(newTimeButton, 0, 0);
             startShopContainer.Dock = DockStyle.Bottom;
-            startShopContainer.Location = new Point(0, 2);
+            startShopContainer.Location = new Point(0, 28);
             startShopContainer.Margin = new Padding(0);
             startShopContainer.Name = "startShopContainer";
             startShopContainer.RowCount = 1;
@@ -153,51 +165,39 @@
             startShopContainer.Size = new Size(258, 23);
             startShopContainer.TabIndex = 4;
             // 
-            // startButton
+            // saveTimetableButton
             // 
-            startButton.Dock = DockStyle.Fill;
-            startButton.Location = new Point(0, 0);
-            startButton.Margin = new Padding(0);
-            startButton.Name = "startButton";
-            startButton.Size = new Size(129, 23);
-            startButton.TabIndex = 0;
-            startButton.Text = "Start";
-            startButton.UseVisualStyleBackColor = true;
-            startButton.Click += startButton_Click;
+            saveTimetableButton.Dock = DockStyle.Fill;
+            saveTimetableButton.Location = new Point(129, 0);
+            saveTimetableButton.Margin = new Padding(0);
+            saveTimetableButton.Name = "saveTimetableButton";
+            saveTimetableButton.Size = new Size(129, 23);
+            saveTimetableButton.TabIndex = 4;
+            saveTimetableButton.Text = "Save to file";
+            saveTimetableButton.UseVisualStyleBackColor = true;
+            saveTimetableButton.Click += saveTimetableButton_Click;
             // 
-            // stopButton
+            // newTimeButton
             // 
-            stopButton.Dock = DockStyle.Fill;
-            stopButton.Enabled = false;
-            stopButton.Location = new Point(129, 0);
-            stopButton.Margin = new Padding(0);
-            stopButton.Name = "stopButton";
-            stopButton.Size = new Size(129, 23);
-            stopButton.TabIndex = 1;
-            stopButton.Text = "Stop";
-            stopButton.UseVisualStyleBackColor = true;
-            stopButton.Click += stopButton_Click;
+            newTimeButton.Dock = DockStyle.Fill;
+            newTimeButton.Location = new Point(0, 0);
+            newTimeButton.Margin = new Padding(0);
+            newTimeButton.Name = "newTimeButton";
+            newTimeButton.Size = new Size(129, 23);
+            newTimeButton.TabIndex = 3;
+            newTimeButton.Text = "Insert timetable";
+            newTimeButton.UseVisualStyleBackColor = true;
+            newTimeButton.Click += newTimeButton_Click;
             // 
             // emergencyButton
             // 
             emergencyButton.Dock = DockStyle.Bottom;
-            emergencyButton.Location = new Point(0, 25);
+            emergencyButton.Location = new Point(0, 51);
             emergencyButton.Name = "emergencyButton";
             emergencyButton.Size = new Size(258, 23);
             emergencyButton.TabIndex = 2;
             emergencyButton.Text = "Emergency";
             emergencyButton.UseVisualStyleBackColor = true;
-            // 
-            // newTimeButton
-            // 
-            newTimeButton.Dock = DockStyle.Bottom;
-            newTimeButton.Location = new Point(0, 48);
-            newTimeButton.Name = "newTimeButton";
-            newTimeButton.Size = new Size(258, 23);
-            newTimeButton.TabIndex = 3;
-            newTimeButton.Text = "Insert timetable";
-            newTimeButton.UseVisualStyleBackColor = true;
-            newTimeButton.Click += newTimeButton_Click;
             // 
             // settingsTab
             // 
@@ -409,7 +409,6 @@
         private RichTextBox timetableTextBox;
         private TableLayoutPanel startShopContainer;
         private Button startButton;
-        private Button stopButton;
         private TabPage logsTab;
         private RichTextBox logBox;
         private TextBox bitsTextBox;
@@ -425,5 +424,6 @@
         private Label startAudioLabel;
         private TextBox emergencyTextBox;
         private Label emergencyLabel;
+        private Button saveTimetableButton;
     }
 }

@@ -9,15 +9,15 @@
             string[] tokens = toParse.Split('\n');
 
             if (toParse.Length < 7 || !toParse.Contains('-') || !toParse.Contains(':'))
-                throw new Exception("The lexer failed to parse the timetable.");
+                throw new Exception("The lexer failed to parse the timetable. <0>");
 
-            foreach (string token in tokens)
+            for (int i = 0; i < tokens.Length; i++)
             {
-                TimeOnly start = TimeOnly.Parse(token.Split('-')[0].Trim());
-                TimeOnly end = TimeOnly.Parse(token.Split('-')[1].Trim());
+                TimeOnly start = TimeOnly.Parse(tokens[i].Split('-')[0].Trim());
+                TimeOnly end = TimeOnly.Parse(tokens[i].Split('-')[1].Trim());
 
                 if (start >= end || start <= previous)
-                    throw new Exception("The lexer failed to parse the timetable.");
+                    throw new Exception($"The lexer failed to parse the timetable. <{i}>");
 
                 lessons.Push(new Lesson
                 {
