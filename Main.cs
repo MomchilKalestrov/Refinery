@@ -1,10 +1,11 @@
 using System.Media;
+using System.Text.RegularExpressions;
 
 namespace Refinery
 {
     public partial class Main : Form
     {
-        private string schedule;
+        private string schedule = "";
         private Thread timetableThread = new(() => { });
 
         private void Log(string log)
@@ -17,8 +18,12 @@ namespace Refinery
         {
             Config.ReadConfigFile();
             InitializeComponent();
-            schedule = File.ReadAllText(Config.TimetablePath);
-            timetableTextBox.Text = File.ReadAllText(Config.TimetablePath);
+            try
+            {
+                schedule = File.ReadAllText(Config.TimetablePath);
+                timetableTextBox.Text = File.ReadAllText(Config.TimetablePath);
+            }
+            catch { }
             portTextBox.Text = Config.Port;
             baudTextBox.Text = Config.Baud.ToString();
             bitsTextBox.Text = Config.Bits.ToString();
@@ -41,7 +46,7 @@ namespace Refinery
                 //Read the contents of the file into a stream
                 var fileStream = fileDialog.OpenFile();
 
-                using StreamReader reader = new StreamReader(fileStream);
+                using StreamReader reader = new(fileStream);
                 schedule = reader.ReadToEnd();
                 timetableTextBox.Text = schedule;
                 Log("Schedule loaded from file.");
@@ -59,7 +64,11 @@ namespace Refinery
             timetableThread = new(() =>
             {
                 Log("Parsing schedule.");
-                Lesson[] lessons = Lexer.ParseTimetable(schedule);
+                Lesson[] lessons = [];
+                
+                try { lessons = Lexer.ParseTimetable(schedule); }
+                catch(Exception e) { MessageBox.Show($"The schedule has improper syntax at token {new Regex(@"<+\d+>").Match(e.Message)}."); }
+
                 Log("Starting timetable.");
 
                 foreach (Lesson lesson in lessons)
@@ -104,6 +113,15 @@ namespace Refinery
             Config.EndAudioPath = endAudioTextBox.Text;
             Config.EmergencyAudioPath = emergencyTextBox.Text;
             Config.DumpToConfigFile();
+        }
+
+        private void saveTimetableButton_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(Config.TimetablePath))
+                File.Delete(Config.TimetablePath);
+
+            using StreamWriter sw = File.CreateText(Config.TimetablePath);
+            sw.Write(timetableTextBox.Text);
         }
     }
 }
